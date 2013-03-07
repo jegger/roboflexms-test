@@ -11,7 +11,8 @@ log = logging.getLogger()
 log.setLevel(logging.DEBUG)"""
 
 #create connection
-client = ModbusClient('192.168.0.10', port=502)
+#client = ModbusClient('192.168.0.10', port=502)
+client = ModbusClient('192.168.50.238', port=502)
 client.connect()
 
 """
@@ -30,40 +31,65 @@ rq = client.write_register(530, 154)
 rq = client.write_coil(8480, False)
 """
 
-lis=[{'x':1, 'y':2, 'z':3, 'rot':5, 'type':4},
-     {'x':6, 'y':7, 'z':8, 'rot':10, 'type':9},
-     {'x':11, 'y':12, 'z':13, 'rot':15, 'type':14},
-     {'x':16, 'y':17, 'z':18, 'rot':20, 'type':19},
-     {'x':21, 'y':22, 'z':23, 'rot':25, 'type':24},
-     {'x':26, 'y':27, 'z':28, 'rot':30, 'type':29}]
+#UI
+def ui():
+    var = raw_input("Exit yet?: (y/n)")
+    print "you entered ", var
+    if var=="y":
+        return
+    
+    var = raw_input("reset safety?: (y/n)")
+    print "you entered ", var
+    if var=="y":
+        reset_safety()
+        return
+    
+    var = raw_input("Send cubes?: (y/n)")
+    print "you entered ", var
+    if var=="y":
+        send_cubes()
+        return
+#UI END
 
-lis=depot.depot
+def reset_safety():
+    rq = client.write_coil(8480, True)
+    time.sleep(1.5)
+    rq = client.write_coil(8480, False)
+    print "done"
+    
 
-#clear all registers
-for reg in range(530):
-    rq = client.write_register(reg, 0)
+def send_cubes():
+    #wirte array
+    lis=depot.depot
+    
+    #clear all registers
+    for reg in range(530):
+        rq = client.write_register(reg, 0)
+    
+    #set coil 'new anlage arrived to false'
+    rq = client.write_coil(8480, False)
+    
+    #write cubes into PLC
+    c=0
+    for cube in lis:
+        #write x
+        rq = client.write_register(c, cube['x'])
+        c+=1
+        #write y
+        rq = client.write_register(c, cube['y'])
+        c+=1
+        #write z
+        rq = client.write_register(c, cube['z'])
+        c+=1
+        #write rot
+        rq = client.write_register(c, cube['typ'])
+        c+=1
+        #write type
+        rq = client.write_register(c, cube['rot'])
+        c+=1
+    
+    #close connection
+    client.close()
 
-#set coil 'new anlage arrived to false'
-rq = client.write_coil(8480, False)
 
-#write cubes into PLC
-c=0
-for cube in lis:
-    #write x
-    rq = client.write_register(c, cube['x'])
-    c+=1
-    #write y
-    rq = client.write_register(c, cube['y'])
-    c+=1
-    #write z
-    rq = client.write_register(c, cube['z'])
-    c+=1
-    #write rot
-    rq = client.write_register(c, cube['typ'])
-    c+=1
-    #write type
-    rq = client.write_register(c, cube['rot'])
-    c+=1
-
-#close connection
-client.close()
+ui()
