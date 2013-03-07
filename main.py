@@ -2,6 +2,7 @@
 
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 import time
+import depot
 
 #create logger
 """import logging
@@ -29,12 +30,14 @@ rq = client.write_register(530, 154)
 rq = client.write_coil(8480, False)
 """
 
-lis=[{'x':0, 'y':2, 'z':0, 'rot':0, 'type':0},
-     {'x':0, 'y':6, 'z':1, 'rot':0, 'type':0},
-     {'x':21, 'y':0, 'z':2, 'rot':0, 'type':0},
-     {'x':0, 'y':0, 'z':3, 'rot':0, 'type':0},
-     {'x':0, 'y':0, 'z':4, 'rot':0, 'type':0},
-     {'x':0, 'y':0, 'z':5, 'rot':0, 'type':0}]
+lis=[{'x':1, 'y':2, 'z':3, 'rot':5, 'type':4},
+     {'x':6, 'y':7, 'z':8, 'rot':10, 'type':9},
+     {'x':11, 'y':12, 'z':13, 'rot':15, 'type':14},
+     {'x':16, 'y':17, 'z':18, 'rot':20, 'type':19},
+     {'x':21, 'y':22, 'z':23, 'rot':25, 'type':24},
+     {'x':26, 'y':27, 'z':28, 'rot':30, 'type':29}]
+
+lis=depot.depot
 
 #clear all registers
 for reg in range(530):
@@ -55,12 +58,11 @@ for cube in lis:
     #write z
     rq = client.write_register(c, cube['z'])
     c+=1
-    print cube['z'], c
     #write rot
-    rq = client.write_register(c, cube['rot'])
+    rq = client.write_register(c, cube['typ'])
     c+=1
     #write type
-    rq = client.write_register(c, cube['type'])
+    rq = client.write_register(c, cube['rot'])
     c+=1
 
 #close connection
