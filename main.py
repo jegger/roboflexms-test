@@ -72,6 +72,7 @@ def send_cubes():
     #write cubes into PLC
     c=0
     for cube in lis:
+        print (c/5)+1, cube
         #write x
         rq = client.write_register(c, cube['x'])
         c+=1

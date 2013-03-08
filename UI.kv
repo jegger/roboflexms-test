@@ -1,6 +1,9 @@
+#: import Window kivy.core.window.Window
+
 <SimpleVisu>:
+	status_label: status_label
 	BoxLayout:
-		width: 500
+		width: Window.width
 		Button:
 			text: "Reset Safety"
 			on_press: root.reset_safety()
@@ -8,17 +11,28 @@
 			text: "move array"
 			on_press: root.move_array()
 		Button:
-			text: "build Bahn from PC!"
-			on_press: root.build(4)
+			text: "build Bahn from PC"
+			on_press: root.build(10)
 		Button:
-			text: "build Bahn1!"
+			text: "build Bahn1"
 			on_press: root.build(1)
 		Button:
-			text: "build Bahn2!"
+			text: "build Bahn2"
 			on_press: root.build(2)
 		Button:
-			text: "build Bahn3!"
+			text: "build Bahn3"
 			on_press: root.build(3)
 		Button:
-			text: "build Bahn Lager!"
+			text: "build Bahn4"
+			on_press: root.build(4)
+		Button:
+			text: "build Bahn Lager"
 			on_press: root.build(0)
+	
+	Label:
+		id: status_label
+		center_x: Window.width/2
+		center_y: Window.height/2
+		text: "..."
+		font_size: 25
+		
